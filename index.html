@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПТУ № 1 — Кофейня</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.19/index.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --coffee-dark: #2C1810;
+            --coffee-medium: #5C3D2E;
+            --coffee-light: #8B6F5E;
+            --cream: #F5F0EB;
+            --cream-dark: #E8E0D8;
+            --warm-white: #FFFCF8;
+            --accent: #D4A574;
+            --accent-dark: #C4956A;
+            --green: #4CAF50;
+            --star: #FFB800;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --shadow-sm: 0 2px 8px rgba(44, 24, 16, 0.08);
+            --shadow-md: 0 4px 20px rgba(44, 24, 16, 0.12);
+            --shadow-lg: 0 8px 40px rgba(44, 24, 16, 0.16);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--warm-white);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav.scrolled {
+            background: rgba(255, 252, 248, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--coffee-dark);
+        }
+
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--coffee-dark);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--coffee-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--coffee-dark);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+            border-radius: 1px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .nav-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.3); }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--coffee-dark);
+            margin: 5px 0;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://image.qwenlm.ai/public_source/79a49a1b-37db-4a9c-a848-a3fe19a5099b/1be226216-8b49-4c38-921e-a71d4169dfd8.png') center/cover no-repeat;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(44, 24, 16, 0.75) 0%, rgba(44, 24, 16, 0.4) 50%, rgba(44, 24, 16, 0.2) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 80px;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 100px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 800;
+            color: white;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), #E8C9A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 500px;
+            margin-bottom: 40px;
+            font-weight: 400;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hero-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-stat-value .star-icon {
+            color: var(--star);
+            font-size: 24px;
+        }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+
+        .hero-scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+            animation: scroll-anim 2s infinite;
+        }
+
+        @keyframes scroll-anim {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 24px;
+        }
+
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-dark);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .section-tag::before,
+        .section-tag::after {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: var(--coffee-dark);
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 16px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Schedule Section */
+        .schedule-section {
+            background: var(--cream);
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .schedule-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(44, 24, 16, 0.05);
+        }
+
+        .schedule-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--coffee-dark);
+            margin-bottom: 8px;
+        }
+
+        .schedule-card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .schedule-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+
+        .schedule-status-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--green);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .schedule-status-text h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+
+        .schedule-status-text p {
+            font-size: 13px;
+            color: #4CAF50;
+            font-weight: 500;
+        }
+
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .schedule-item:hover {
+            background: var(--cream);
+        }
+
+        .schedule-item.today {
+            background: var(--coffee-dark);
+            color: white;
+        }
+
+        .schedule-item.today .schedule-day {
+            color: white;
+        }
+
+        .schedule-item.today .schedule-time {
+            color: var(--accent);
+        }
+
+        .schedule-item.today .schedule-indicator {
+            background: var(--accent);
+            color: var(--coffee-dark);
+        }
+
+        .schedule-day {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .schedule-time {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .schedule-indicator {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: var(--cream);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .schedule-visual {
+            position: relative;
+        }
+
+        .schedule-clock {
+            width: 100%;
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(44, 24, 16, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clock-face {
+            width: 80%;
+            height: 80%;
+            position: relative;
+        }
+
+        .clock-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: var(--coffee-dark);
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .clock-hour-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 60px;
+            background: var(--coffee-dark);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%);
+            z-index: 5;
+            transition: transform 1s ease;
+        }
+
+        .clock-minute-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 80px;
+            background: var(--coffee-medium);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%);
+            z-index: 4;
+            transition: transform 1s ease;
+        }
+
+        .clock-second-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1.5px;
+            height: 90px;
+            background: var(--accent);
+            border-radius: 1px;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%);
+            z-index: 6;
+        }
+
+        .clock-mark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+        }
+
+        .clock-number {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--coffee-dark);
+        }
+
+        .schedule-info-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .schedule-info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(44, 24, 16, 0.05);
+            text-align: center;
+        }
+
+        .schedule-info-card-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .schedule-info-card-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--coffee-dark);
+        }
+
+        .schedule-info-card-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            background: var(--warm-white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            group: true;
+        }
+
+        .gallery-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+            aspect-ratio: auto;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(44, 24, 16, 0.6) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item-zoom {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s;
+        }
+
+        .gallery-item:hover .gallery-item-zoom {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .lightbox.active .lightbox-img {
+            transform: scale(1);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev { left: 24px; }
+        .lightbox-next { right: 24px; }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background: var(--cream);
+        }
+
+        .reviews-summary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 64px;
+            padding: 40px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(44, 24, 16, 0.05);
+        }
+
+        .reviews-summary-score {
+            text-align: center;
+        }
+
+        .reviews-summary-score .big-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--coffee-dark);
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .reviews-summary-score .stars {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            margin: 12px 0 4px;
+        }
+
+        .reviews-summary-score .stars .star {
+            font-size: 20px;
+            color: var(--star);
+        }
+
+        .reviews-summary-score .count {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .reviews-bars {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .review-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .review-bar-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 20px;
+            text-align: right;
+        }
+
+        .review-bar-label .star-small {
+            color: var(--star);
+            font-size: 12px;
+        }
+
+        .review-bar-track {
+            flex: 1;
+            height: 8px;
+            background: var(--cream);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .review-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--coffee-light));
+            border-radius: 4px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+        }
+
+        .review-bar-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            width: 24px;
+            font-weight: 500;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(44, 24, 16, 0.05);
+            transition: all 0.4s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .review-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .review-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .review-avatar.av1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .review-avatar.av2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .review-avatar.av3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+        .review-author-info {
+            flex: 1;
+        }
+
+        .review-author-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--coffee-dark);
+        }
+
+        .review-author-level {
+            font-size: 12px;
+            color: var(--accent-dark);
+            font-weight: 600;
+        }
+
+        .review-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .review-stars .star {
+            font-size: 14px;
+            color: var(--star);
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .review-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .review-text-more {
+            color: var(--accent-dark);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-family: inherit;
+            display: inline;
+        }
+
+        .review-text-more:hover {
+            text-decoration: underline;
+        }
+
+        .review-hidden {
+            display: none;
+        }
+
+        .review-hidden.expanded {
+            display: inline;
+        }
+
+        .review-footer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--cream);
+        }
+
+        .review-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+            padding: 6px 12px;
+            border-radius: 100px;
+            transition: all 0.3s;
+        }
+
+        .review-action:hover {
+            background: var(--cream);
+            color: var(--coffee-dark);
+        }
+
+        .review-action.liked {
+            color: var(--accent-dark);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--coffee-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-family: inherit;
+        }
+
+        .cta-btn-primary {
+            background: var(--accent);
+            color: var(--coffee-dark);
+        }
+
+        .cta-btn-primary:hover {
+            background: #E0B585;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+        }
+
+        .cta-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1A0F0A;
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--coffee-medium);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .footer-logo-text {
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-status {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-content {
+                padding: 100px 20px 60px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item:first-child {
+                grid-column: span 1;
+                grid-row: span 1;
+                aspect-ratio: 4/3;
+            }
+
+            .reviews-summary {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .reviews-bars {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .section {
+                padding: 64px 16px;
+            }
+
+            .schedule-info-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+            }
+
+            .lightbox-prev { left: 12px; }
+            .lightbox-next { right: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                letter-spacing: -1px;
+            }
+
+            .schedule-card {
+                padding: 24px;
+            }
+
+            .review-card {
+                padding: 20px;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(255, 252, 248, 0.98);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--coffee-dark);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--accent-dark);
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: var(--coffee-dark);
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">П1</div>
+                <span class="nav-logo-text">ПТУ № 1</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#schedule">График работы</a></li>
+                <li><a href="#gallery">Фотографии</a></li>
+                <li><a href="#reviews">Отзывы</a></li>
+            </ul>
+            <div class="nav-status">
+                <span class="nav-status-dot"></span>
+                <span>Открыто</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+        <a href="#schedule" onclick="closeMobileMenu()">График работы</a>
+        <a href="#gallery" onclick="closeMobileMenu()">Фотографии</a>
+        <a href="#reviews" onclick="closeMobileMenu()">Отзывы</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Открыто до 20:00
+            </div>
+            <h1 class="hero-title">
+                ПТУ № 1
+                <span>Кофейня</span>
+            </h1>
+            <p class="hero-subtitle">
+                Место, где каждая чашка кофе — это маленькое путешествие. 
+                Свежая обжарка, авторские рецепты и тёплая атмосфера.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">
+                        4.4 <span class="star-icon">★</span>
+                    </div>
+                    <div class="hero-stat-label">11 оценок</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">
+                        07:45 <span style="font-size:16px; opacity:0.5;">—</span> 20:00
+                    </div>
+                    <div class="hero-stat-label">Часы работы</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">
+                        <span style="font-size:20px; opacity:0.7;">☕</span> Ежедневно
+                    </div>
+                    <div class="hero-stat-label">Без выходных</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Листайте</span>
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="section schedule-section" id="schedule">
+        <div class="section-inner">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Расписание</div>
+                <h2 class="section-title">Время работы</h2>
+                <p class="section-subtitle">Мы работаем каждый день, чтобы вы могли начать утро с идеального кофе</p>
+            </div>
+            <div class="schedule-grid">
+                <div class="schedule-card animate-on-scroll">
+                    <h3 class="schedule-card-title">График работы</h3>
+                    <p class="schedule-card-subtitle">Актуальное расписание на текущую неделю</p>
+                    
+                    <div class="schedule-status">
+                        <div class="schedule-status-icon">✓</div>
+                        <div class="schedule-status-text">
+                            <h4>Открыто до 20:00</h4>
+                            <p>Сегодня работаем в обычном режиме</p>
+                        </div>
+                    </div>
+
+                    <div class="schedule-list" id="scheduleList">
+                        <div class="schedule-item" data-day="1">
+                            <span class="schedule-day">Понедельник</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="2">
+                            <span class="schedule-day">Вторник</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="3">
+                            <span class="schedule-day">Среда</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="4">
+                            <span class="schedule-day">Четверг</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="5">
+                            <span class="schedule-day">Пятница</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="6">
+                            <span class="schedule-day">Суббота</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                        <div class="schedule-item" data-day="0">
+                            <span class="schedule-day">Воскресенье</span>
+                            <span class="schedule-time">07:45–20:00</span>
+                            <span class="schedule-indicator">Открыто</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="schedule-visual animate-on-scroll">
+                    <div class="schedule-clock">
+                        <div class="clock-face" id="clockFace">
+                            <div class="clock-center"></div>
+                            <div class="clock-hour-hand" id="clockHour"></div>
+                            <div class="clock-minute-hand" id="clockMinute"></div>
+                            <div class="clock-second-hand" id="clockSecond"></div>
+                        </div>
+                    </div>
+                    <div class="schedule-info-cards">
+                        <div class="schedule-info-card">
+                            <div class="schedule-info-card-icon"></div>
+                            <div class="schedule-info-card-value">07:45</div>
+                            <div class="schedule-info-card-label">Открытие</div>
+                        </div>
+                        <div class="schedule-info-card">
+                            <div class="schedule-info-card-icon">🌙</div>
+                            <div class="schedule-info-card-value">20:00</div>
+                            <div class="schedule-info-card-label">Закрытие</div>
+                        </div>
+                        <div class="schedule-info-card">
+                            <div class="schedule-info-card-icon">☀️</div>
+                            <div class="schedule-info-card-value">12ч 15м</div>
+                            <div class="schedule-info-card-label">Часов работы</div>
+                        </div>
+                        <div class="schedule-info-card">
+                            <div class="schedule-info-card-icon"></div>
+                            <div class="schedule-info-card-value">7/7</div>
+                            <div class="schedule-info-card-label">Без выходных</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="section gallery-section" id="gallery">
+        <div class="section-inner">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Галерея</div>
+                <h2 class="section-title">Фотографии</h2>
+                <p class="section-subtitle">Загляните в нашу кофейню ещё до визита</p>
+            </div>
+            <div class="gallery-grid animate-on-scroll">
+                <div class="gallery-item" onclick="openLightbox(0)">
+                    <img src="https://image.qwenlm.ai/public_source/79a49a1b-37db-4a9c-a848-a3fe19a5099b/1be226216-8b49-4c38-921e-a71d4169dfd8.png" alt="Интерьер кофейни" loading="lazy">
+                    <div class="gallery-item-overlay"></div>
+                    <div class="gallery-item-zoom">🔍</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(1)">
+                    <img src="https://avatars.mds.yandex.net/get-altay/16439251/2a0000019a01b1e086dd06985c33fb699839/XXXL" alt="Кофейня ПТУ №1" loading="lazy">
+                    <div class="gallery-item-overlay"></div>
+                    <div class="gallery-item-zoom">🔍</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(2)">
+                    <img src="https://avatars.mds.yandex.net/get-altay/15502563/2a00000196a52e0d481c1945101b5128296d/XXXL" alt="Кофе" loading="lazy">
+                    <div class="gallery-item-overlay"></div>
+                    <div class="gallery-item-zoom"></div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(3)">
+                    <img src="https://avatars.mds.yandex.net/get-altay/15629777/2a0000019a01c128d7f4f750111884589984/XXXL" alt="Атмосфера кофейни" loading="lazy">
+                    <div class="gallery-item-overlay"></div>
+                    <div class="gallery-item-zoom">🔍</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+    </div>
+
+    <!-- Reviews Section -->
+    <section class="section reviews-section" id="reviews">
+        <div class="section-inner">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Отзывы</div>
+                <h2 class="section-title">Что говорят гости</h2>
+                <p class="section-subtitle">Реальные отзывы от наших постоянных посетителей</p>
+            </div>
+
+            <div class="reviews-summary animate-on-scroll">
+                <div class="reviews-summary-score">
+                    <div class="big-number">4.4</div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star" style="opacity:0.4;">★</span>
+                    </div>
+                    <div class="count">11 оценок</div>
+                </div>
+                <div class="reviews-bars">
+                    <div class="review-bar-row">
+                        <span class="review-bar-label">5 <span class="star-small">★</span></span>
+                        <div class="review-bar-track"><div class="review-bar-fill" data-width="72"></div></div>
+                        <span class="review-bar-count">8</span>
+                    </div>
+                    <div class="review-bar-row">
+                        <span class="review-bar-label">4 <span class="star-small">★</span></span>
+                        <div class="review-bar-track"><div class="review-bar-fill" data-width="18"></div></div>
+                        <span class="review-bar-count">2</span>
+                    </div>
+                    <div class="review-bar-row">
+                        <span class="review-bar-label">3 <span class="star-small">★</span></span>
+                        <div class="review-bar-track"><div class="review-bar-fill" data-width="9"></div></div>
+                        <span class="review-bar-count">1</span>
+                    </div>
+                    <div class="review-bar-row">
+                        <span class="review-bar-label">2 <span class="star-small">★</span></span>
+                        <div class="review-bar-track"><div class="review-bar-fill" data-width="0"></div></div>
+                        <span class="review-bar-count">0</span>
+                    </div>
+                    <div class="review-bar-row">
+                        <span class="review-bar-label">1 <span class="star-small">★</span></span>
+                        <div class="review-bar-track"><div class="review-bar-fill" data-width="0"></div></div>
+                        <span class="review-bar-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-list">
+                <div class="review-card" data-delay="0">
+                    <div class="review-header">
+                        <div class="review-avatar av1">КГ</div>
+                        <div class="review-author-info">
+                            <div class="review-author-name">Анонимный гость</div>
+                            <div class="review-author-level">Постоянный посетитель</div>
+                        </div>
+                        <div class="review-meta">
+                            <div class="review-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        Здравствуйте :) не знаю с чем это связано, но кофе стало намного вкуснее! Я люблю капучино и мне важно чтобы пенка была хорошо взбита. Часто покупала кофе в другом месте, там кофе тоже…
+                        <span class="review-hidden" id="review1hidden">хороший, но здесь — совершенно другой уровень! Рекомендую всем, кто ценит настоящий кофе с качественной пенкой.</span>
+                        <button class="review-text-more" onclick="toggleReview(1)">Ещё</button>
+                    </div>
+                    <div class="review-footer">
+                        <button class="review-action" onclick="toggleLike(this)">
+                            <span></span> <span class="like-count">3</span>
+                        </button>
+                        <button class="review-action">
+                            <span>💬</span> Ответить
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-card" data-delay="150">
+                    <div class="review-header">
+                        <div class="review-avatar av2">КГ</div>
+                        <div class="review-author-info">
+                            <div class="review-author-name">Кеншин Гринев</div>
+                            <div class="review-author-level">Знаток города 6 уровня</div>
+                        </div>
+                        <div class="review-meta">
+                            <div class="review-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                            <span class="review-date">23 мая 2025</span>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        Зашёл мимолетом, очень вкусно делают кофе, качественная пенка. Обычно не люблю капучино брать, так как в большинстве плохо смешивают молоко с кофе, и выходит горечь, здесь все идеально.
+                    </div>
+                    <div class="review-footer">
+                        <button class="review-action" onclick="toggleLike(this)">
+                            <span>👍</span> <span class="like-count">5</span>
+                        </button>
+                        <button class="review-action">
+                            <span>💬</span> Ответить
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-card" data-delay="300">
+                    <div class="review-header">
+                        <div class="review-avatar av3">АР</div>
+                        <div class="review-author-info">
+                            <div class="review-author-name">Анастасия Ревина</div>
+                            <div class="review-author-level">Знаток города 7 уровня</div>
+                        </div>
+                        <div class="review-meta">
+                            <div class="review-stars">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                            <span class="review-date">8 мая 2025</span>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        Люблю эту кофейню! Начинают работать раньше других в районе, всегда хороший вкусный кофе, есть что перекусить, а бариста максимально комфортные и добрые! Начали еще делать вот такую красоту🥹
+                    </div>
+                    <div class="review-footer">
+                        <button class="review-action" onclick="toggleLike(this)">
+                            <span>👍</span> <span class="like-count">7</span>
+                        </button>
+                        <button class="review-action">
+                            <span>💬</span> Ответить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="section-inner">
+            <div class="cta-content animate-on-scroll">
+                <h2 class="cta-title">Приходите за кофе ☕</h2>
+                <p class="cta-subtitle">Мы ждём вас каждый день с 07:45 до 20:00. Начните свой день с идеального капучино!</p>
+                <div class="cta-buttons">
+                    <a href="#schedule" class="cta-btn cta-btn-primary">
+                        📍 График работы
+                    </a>
+                    <a href="#reviews" class="cta-btn cta-btn-secondary">
+                        ⭐ Читать отзывы
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">П1</div>
+                <span class="footer-logo-text">ПТУ № 1 — Кофейня</span>
+            </div>
+            <p class="footer-text">© 2025 ПТУ № 1. Работаем для вас каждый день с 07:45 до 20:00</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation scroll effect
+        const nav = document.getElementById('nav');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            lastScroll = currentScroll;
+        });
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+        }
+
+        // Highlight today's schedule
+        function highlightToday() {
+            const today = new Date().getDay();
+            const items = document.querySelectorAll('.schedule-item');
+            items.forEach(item => {
+                const day = parseInt(item.dataset.day);
+                if (day === today) {
+                    item.classList.add('today');
+                    item.querySelector('.schedule-indicator').textContent = 'Сегодня';
+                }
+            });
+        }
+        highlightToday();
+
+        // Analog clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const millis = now.getMilliseconds();
+
+            const hourDeg = (hours % 12) * 30 + minutes * 0.5;
+            const minuteDeg = minutes * 6 + seconds * 0.1;
+            const secondDeg = seconds * 6 + millis * 0.006;
+
+            const hourHand = document.getElementById('clockHour');
+            const minuteHand = document.getElementById('clockMinute');
+            const secondHand = document.getElementById('clockSecond');
+
+            if (hourHand) {
+                hourHand.style.transform = `translate(-50%, -100%) rotate(${hourDeg}deg)`;
+                minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteDeg}deg)`;
+                secondHand.style.transform = `translate(-50%, -100%) rotate(${secondDeg}deg)`;
+            }
+
+            // Add clock numbers
+            const clockFace = document.getElementById('clockFace');
+            if (clockFace && !clockFace.querySelector('.clock-number')) {
+                const clockNumbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+                const radius = 42;
+                clockNumbers.forEach((num, i) => {
+                    const angle = (i * 30 - 90) * (Math.PI / 180);
+                    const x = 50 + radius * Math.cos(angle);
+                    const y = 50 + radius * Math.sin(angle);
+                    const el = document.createElement('div');
+                    el.className = 'clock-number';
+                    el.textContent = num;
+                    el.style.left = `${x}%`;
+                    el.style.top = `${y}%`;
+                    el.style.transform = 'translate(-50%, -50%)';
+                    clockFace.appendChild(el);
+                });
+            }
+        }
+
+        setInterval(updateClock, 50);
+        updateClock();
+
+        // Gallery lightbox
+        const galleryImages = [
+            'https://image.qwenlm.ai/public_source/79a49a1b-37db-4a9c-a848-a3fe19a5099b/1be226216-8b49-4c38-921e-a71d4169dfd8.png',
+            'https://avatars.mds.yandex.net/get-altay/16439251/2a0000019a01b1e086dd06985c33fb699839/XXXL',
+            'https://avatars.mds.yandex.net/get-altay/15502563/2a00000196a52e0d481c1945101b5128296d/XXXL',
+            'https://avatars.mds.yandex.net/get-altay/15629777/2a0000019a01c128d7f4f750111884589984/XXXL'
+        ];
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const counter = document.getElementById('lightboxCounter');
+            img.src = galleryImages[index];
+            counter.textContent = `${index + 1} / ${galleryImages.length}`;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function navigateLightbox(direction) {
+            currentLightboxIndex = (currentLightboxIndex + direction + galleryImages.length) % galleryImages.length;
+            const img = document.getElementById('lightboxImg');
+            const counter = document.getElementById('lightboxCounter');
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = galleryImages[currentLightboxIndex];
+                img.style.opacity = '1';
+                counter.textContent = `${currentLightboxIndex + 1} / ${galleryImages.length}`;
+            }, 200);
+        }
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+
+        // Review expand
+        function toggleReview(id) {
+            const hidden = document.getElementById(`review${id}hidden`);
+            const btn = hidden.nextElementSibling;
+            if (hidden.classList.contains('expanded')) {
+                hidden.classList.remove('expanded');
+                btn.textContent = 'Ещё';
+            } else {
+                hidden.classList.add('expanded');
+                btn.textContent = 'Свернуть';
+            }
+        }
+
+        // Like toggle
+        function toggleLike(btn) {
+            btn.classList.toggle('liked');
+            const countEl = btn.querySelector('.like-count');
+            let count = parseInt(countEl.textContent);
+            if (btn.classList.contains('liked')) {
+                count++;
+            } else {
+                count--;
+            }
+            countEl.textContent = count;
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, parseInt(delay));
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll, .review-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Animate review bars
+        const barsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const fills = entry.target.querySelectorAll('.review-bar-fill');
+                    fills.forEach((fill, i) => {
+                        setTimeout(() => {
+                            fill.style.width = fill.dataset.width + '%';
+                        }, i * 100);
+                    });
+                    barsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const barsContainer = document.querySelector('.reviews-bars');
+        if (barsContainer) barsObserver.observe(barsContainer);
+
+        // Smooth image transition for lightbox
+        const lightboxImg = document.getElementById('lightboxImg');
+        lightboxImg.style.transition = 'opacity 0.2s ease';
+    </script>
+</body>
+</html>
+
