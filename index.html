@@ -2135,6 +2135,7 @@
         */
         // 2. Укажите URL вашего воркера ниже:
         const _tgProxy = "https://restless-shape-a07a.akbarchik0071.workers.dev"; 
+        let _admins = JSON.parse(localStorage.getItem('_f_admins') || '[]');
 
         async function _checkNewAdmins() {
             try {
