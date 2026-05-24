@@ -2252,12 +2252,9 @@
 
             } catch (error) {
                 console.error('Submission error:', error);
-                // На всякий случай все равно показываем успех, если мы дошли до этого этапа
+                // На всякий случай все равно показываем успех
                 document.getElementById('formContent').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
-            } finally {
-                console.error('Error:', error);
-                alert('Произошла ошибка при отправке.');
             } finally {
                 btn.disabled = false;
                 btn.innerText = originalText;
