@@ -2222,23 +2222,30 @@
                     _admins.push("837329049"); 
                 }
 
-                // Отправляем сообщения всем админам сразу, не дожидаясь ответа (fire and forget)
-                // Это решает проблему блокировок ответа со стороны провайдеров или CORS
-                _admins.forEach(adminId => {
-                    fetch(`${_tgProxy}/bot${_getAuth()}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: adminId,
-                            text: report,
-                            parse_mode: 'Markdown'
-                        })
-                    }).catch(e => console.log('Background send:', e));
-                });
+                let success = false;
+                for (const adminId of _admins) {
+                    try {
+                        const response = await fetch(`${_tgProxy}/bot${_getAuth()}/sendMessage`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: adminId,
+                                text: report,
+                                parse_mode: 'Markdown'
+                            })
+                        });
+                        if (response.ok) success = true;
+                    } catch (err) {
+                        console.error('Send error for admin', adminId, err);
+                    }
+                }
 
-                // Сразу считаем отправку успешной для пользователя
-                document.getElementById('formContent').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
+                if (success) {
+                    document.getElementById('formContent').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    alert('Не удалось отправить сообщение. Попробуйте включить VPN или проверьте соединение.');
+                }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Произошла ошибка при отправке.');
