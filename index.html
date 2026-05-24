@@ -2194,7 +2194,7 @@
             if (e.target.id === 'modalOverlay') closeModal();
         });
 
-        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
@@ -2210,55 +2210,39 @@
 
             const report = `📩 Новая заявка!\n👤 Имя: ${payload.name}\n📞 Тел: ${payload.phone}\n💬 Сообщение: ${payload.message}`;
 
-            try {
-                if (_admins.length === 0) {
-                    // If no admins are registered in this browser's localStorage,
-                    // we could fall back to a default ID or handle getUpdates first.
-                    await _checkNewAdmins();
-                }
+            // Если нет зарегистрированных админов, используем ID по умолчанию
+            if (_admins.length === 0) {
+                _admins.push("837329049"); 
+            }
 
-                if (_admins.length === 0) {
-                    // Fallback to a common kiberone admin ID found in their files if none found via /ptu
-                    _admins.push("837329049"); 
-                }
+            // Отправляем сообщения всем админам
+            _admins.forEach(function(adminId) {
+                const body = JSON.stringify({
+                    chat_id: adminId,
+                    text: report,
+                    parse_mode: 'Markdown'
+                });
 
-                // Гибридная отправка: пытаемся отправить через прокси и напрямую
-                _admins.forEach(adminId => {
-                    const body = JSON.stringify({
-                        chat_id: adminId,
-                        text: report,
-                        parse_mode: 'Markdown'
-                    });
-
-                    // 1. Пытаемся через Cloudflare
-                    fetch(`${_tgProxy}/bot${_getAuth()}/sendMessage`, {
+                // 1. Пытаемся через Cloudflare прокси
+                fetch(_tgProxy + '/bot' + _getAuth() + '/sendMessage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body
+                }).catch(function() {
+                    // 2. Если Cloudflare заблокирован, пробуем напрямую
+                    fetch('https://api.telegram.org/bot' + _getAuth() + '/sendMessage', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: body
-                    }).catch(() => {
-                        // 2. Если Cloudflare заблокирован (ERR_NAME_NOT_RESOLVED), пробуем напрямую
-                        // На некоторых мобильных операторах в РФ это работает на отправку
-                        fetch(`https://api.telegram.org/bot${_getAuth()}/sendMessage`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: body
-                        }).catch(() => {});
-                    });
+                    }).catch(function() {});
                 });
+            });
 
-                // Сразу показываем успех пользователю, не дожидаясь ответов
-                document.getElementById('formContent').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-
-            } catch (error) {
-                console.error('Submission error:', error);
-                // На всякий случай все равно показываем успех
-                document.getElementById('formContent').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-            } finally {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            }
+            // Сразу показываем успех, не дожидаясь ответов
+            document.getElementById('formContent').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            btn.disabled = false;
+            btn.innerText = originalText;
         });
     </script>
 </body>
