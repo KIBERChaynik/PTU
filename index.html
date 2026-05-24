@@ -45,15 +45,19 @@
         }
 
         /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 0 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0 24px;
+    background: rgba(255, 252, 248, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
         .nav.scrolled {
             background: rgba(255, 252, 248, 0.92);
@@ -1347,14 +1351,13 @@
                 <span class="hero-badge-dot"></span>
                 Открыто до 20:00
             </div>
-            <h1 class="hero-title">
-                ПТУ № 1
-                <span>Кофейня</span>
-            </h1>
-            <p class="hero-subtitle">
-                Место, где каждая чашка кофе — это маленькое путешествие. 
-                Свежая обжарка, авторские рецепты и тёплая атмосфера.
-            </p>
+<h1 class="hero-title">
+    ПТУ №1
+    <span>Кофейня в Калининграде</span>
+</h1>
+<p class="hero-subtitle">
+    ПТУ №1 — уютная кофейня в Калининграде. Свежая обжарка, авторский кофе, десерты, завтраки и тёплая атмосфера каждый день с 07:45 до 20:00.
+</p>
             <div class="hero-stats">
                 <div class="hero-stat">
                     <div class="hero-stat-value">
